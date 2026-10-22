@@ -256,7 +256,7 @@ async function loadDashboard(){
         dashboardData[subject]={error:error.message==='TIMEOUT_CSV'?'Waktu tunggu 12 detik habis. Browser tidak menerima CSV dari Google Sheets. Periksa akses CSV dan jalankan halaman dari HTTPS.':error.message||'Permintaan data gagal. Periksa akses publik CSV dan batasan CORS.'};
       }finally{
         clearTimeout(timer);
-        try{renderDashboard();}catch(renderError){box.innerHTML='<div class="dash-status error">Dashboard gagal menampilkan data. Muat ulang halaman. Jika masalah berlanjut, periksa struktur CSV.</div>';}
+        try{renderDashboard();}catch(renderError){box.innerHTML=`<div class="dash-status error"><strong>Dashboard gagal menampilkan data.</strong><br>Detail: ${escapeHTML(renderError?.message||String(renderError))}</div>`;}
       }
     }));
   }catch(error){
@@ -269,11 +269,11 @@ async function loadDashboard(){
   if(!data){box.innerHTML=`<div class="dash-controls">${tabs}</div><div class="dash-status">Memuat data…</div>`;return;}
   if(data.error){box.innerHTML=`<div class="dash-controls">${tabs}</div><div class="dash-status error"><strong>Data ${dashboardSubject} belum dapat dimuat.</strong><br>Periksa koneksi, izin publik spreadsheet, dan akses CSV. Detail: ${escapeHTML(data.error)}.</div><p class="dash-footer">Sumber: <a href="${DASHBOARD_SOURCES[dashboardSubject]}" target="_blank" rel="noopener">buka CSV ${dashboardSubject}</a>. Bila dashboard dibuka sebagai file lokal, browser dapat membatasi pembacaan lintas situs; jalankan halaman dari hosting HTTPS.</p>`;return;}
   const rows=data.rows;const scoreVals=data.scoreKey?rows.map(r=>numeric(r[data.scoreKey])).filter(v=>v!==null):[];
-  const maxScore=scoreVals.length&&Math.max(...scoreVals)<=100?100:Math.max(...scoreVals,1);
+  const maxValue=scoreVals.reduce((max,value)=>Math.max(max,value),1);
+  const maxScore=scoreVals.length&&maxValue<=100?100:maxValue;
   const scored=scoreVals.map(v=>Math.max(0,Math.min(100,v/maxScore*100)));
   const avg=scored.length?scored.reduce((a,b)=>a+b,0)/scored.length:null;
   const readiness=scored.length?{ready:scored.filter(v=>v>=readinessThreshold).length,developing:scored.filter(v=>v>=60&&v<readinessThreshold).length,support:scored.filter(v=>v<60).length}:null;
-  const recent=data.dateKey?rows.map(r=>r[data.dateKey]).filter(Boolean).sort().at(-1):null;
   const filtered=rows.filter(r=>!search||Object.values(r).some(v=>String(v).toLocaleLowerCase('id-ID').includes(search.toLocaleLowerCase('id-ID'))));
   const kpis=`<div class="dash-kpis"><div class="dash-kpi"><span>Jumlah respons</span><strong>${rows.length}</strong></div><div class="dash-kpi"><span>Rata-rata ${data.scoreKey?escapeHTML(data.scoreKey):'nilai'}</span><strong>${avg===null?'—':avg.toFixed(1)+'%'}</strong></div><div class="dash-kpi"><span>Siap (≥${readinessThreshold}%)</span><strong>${readiness?readiness.ready:'—'}</strong></div><div class="dash-kpi"><span>Perlu penguatan (&lt;60%)</span><strong>${readiness?readiness.support:'—'}</strong></div></div>`;
   const readinessCard=readiness?`<div class="dash-card"><h3>Kesiapan berdasarkan nilai</h3>${bar('Siap',readiness.ready,scored.length,'ready')}${bar('Berkembang',readiness.developing,scored.length,'mid')}${bar('Perlu penguatan',readiness.support,scored.length,'low')}<p class="dash-footer">Patokan awal: siap ≥${readinessThreshold}%, berkembang 60–${readinessThreshold-1}%, perlu penguatan &lt;60%. Ini indikator deskriptif, bukan standar kelulusan.</p></div>`:`<div class="dash-card"><h3>Analisis kesiapan belum tersedia</h3><p>Kolom nilai/skor belum terdeteksi otomatis. Data tetap dapat diperiksa pada tabel; sesuaikan nama kolom sumber agar analisis nilai dapat dihitung.</p></div>`;
