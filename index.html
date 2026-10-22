@@ -50,6 +50,22 @@ h1{font-size:clamp(38px,5.2vw,68px);line-height:1.02;letter-spacing:-.045em;marg
 .footer{background:#131f46;color:#d3def4;text-align:center;padding:22px;font-size:11px;letter-spacing:.04em;border-top:4px solid var(--coral)}
 .panel{display:none;border-top:1px solid #dce5f3;background:#f4f7fc}
 .panel.active{display:block}
+.dashboard-content{padding:24px clamp(16px,4vw,48px) 40px;background:#f6f8fc;min-height:320px}
+.dash-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:20px}
+.dash-controls button,.dash-controls select,.dash-search{font:inherit;border:1px solid #cbd5e1;border-radius:10px;background:#fff;padding:10px 13px;color:#14213d}
+.dash-controls button{font-weight:700;cursor:pointer}.dash-controls button[aria-pressed="true"]{background:#172554;color:#fff;border-color:#172554}
+.dash-search{margin-left:auto;min-width:min(260px,100%)}
+.dash-note{color:#66758e;font-size:13px;line-height:1.6;margin:0 0 16px}
+.dash-status{padding:16px;border-radius:12px;background:#fff;border:1px solid #e1e8f0;color:#526078}
+.dash-status.error{border-color:#f2b7aa;background:#fff8f6;color:#873b2b}
+.dash-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+.dash-kpi,.dash-card{background:#fff;border:1px solid #e1e8f0;border-radius:14px;padding:17px;box-shadow:0 5px 16px rgba(23,37,84,.04)}
+.dash-kpi span{display:block;font-size:12px;color:#66758e;margin-bottom:8px}.dash-kpi strong{font-size:24px;color:#172554}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.dash-card h3{font-size:15px;margin:0 0 15px;color:#172554}
+.bar-row{display:grid;grid-template-columns:minmax(90px,1fr) minmax(70px,2fr) 42px;gap:10px;align-items:center;margin:11px 0;font-size:12px;color:#43516a}
+.bar-track{height:10px;border-radius:99px;background:#edf1f7;overflow:hidden}.bar-fill{height:100%;border-radius:99px;background:#2563eb}.bar-fill.low{background:#f9734b}.bar-fill.mid{background:#e9aa34}
+.dash-table-wrap{overflow:auto;margin-top:14px}.dash-table{border-collapse:collapse;width:100%;font-size:12px;background:#fff}.dash-table th,.dash-table td{padding:10px 11px;border-bottom:1px solid #e8edf4;text-align:left;white-space:nowrap}.dash-table th{color:#526078;background:#f8faff;position:sticky;top:0}.readiness{font-weight:700}.ready{color:#167344}.developing{color:#9a6600}.support{color:#b44732}
+.dash-footer{font-size:11px;color:#718096;margin-top:14px;line-height:1.6}
 .panel-head{min-height:62px;padding:10px 22px;background:linear-gradient(100deg,#172554,#245fca);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:3px solid var(--coral)}
 .panel-title{font-size:14px;font-weight:800;letter-spacing:.01em}
 .close-btn{border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:9px 13px;background:#ffda79;color:#172554;font-weight:800;font-size:12px;cursor:pointer;transition:background .2s,transform .2s}
@@ -60,6 +76,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #f9734b;outline-offset:3p
 @media(min-width:1200px){.sim{min-height:370px}}
 @media(max-width:900px){.hero{grid-template-columns:1fr;gap:32px;min-height:auto}.hero>div:first-child{text-align:center}.hero .lead{margin-left:auto;margin-right:auto}.hero .kicker{justify-content:center}.sim-grid{max-width:760px;margin:0 auto;width:100%}.stats{padding-bottom:36px}}
 @media(max-width:620px){.header{padding:13px 15px}.brand{gap:10px}.brand img{width:44px;height:44px;border-radius:13px}.school{font-size:14px}.sub{font-size:9px;letter-spacing:0}.dashboard-btn{padding:9px 10px;font-size:10px}.hero{padding:35px 17px}.hero>div:first-child{text-align:left}.hero .kicker{justify-content:flex-start}h1{font-size:40px}.lead{font-size:14px}.sim-grid{grid-template-columns:1fr}.sim{min-height:295px;padding:21px}.stats,.grid{grid-template-columns:1fr}.stats{padding:0 17px 34px;gap:10px}.stat{padding:15px 16px}.features{padding:39px 17px 49px}.features h2{text-align:left;margin-bottom:19px}.item{padding:18px}.panel-head{padding:10px 13px}.panel-title{font-size:12px}.close-btn{padding:8px 10px;font-size:11px}.frame-wrap{height:calc(100vh - 60px);min-height:560px}}
+@media(max-width:720px){.dash-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-grid{grid-template-columns:1fr}.dash-search{margin-left:0;width:100%}}
 @keyframes riseIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes headerDrop{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes iconFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(-2deg)}}
@@ -145,8 +162,8 @@ button:focus-visible,a:focus-visible{outline:3px solid #f9734b;outline-offset:3p
     <div class="panel-title">📊 Dashboard Subrayon 20 Kec. Kalibaru</div>
     <button class="close-btn" type="button" onclick="closePanel()">← Kembali</button>
   </div>
-  <div class="frame-wrap">
-    <iframe id="dashboardFrame" class="frame" src="about:blank" title="Dashboard Subrayon 20 Kec. Kalibaru" allow="fullscreen"></iframe>
+  <div class="dashboard-content" id="dashboardContent" aria-live="polite">
+    <div class="dash-status">Memuat data Bahasa Indonesia dan Matematika…</div>
   </div>
 </section>
 
@@ -160,8 +177,12 @@ const SIMULATION_URL =
 const MATH_SIMULATION_URL =
 "https://mtksim2.vercel.app/";
 
-const DASHBOARD_URL =
-"https://script.google.com/macros/s/AKfycbwFgh0YOOclB9wOorA8PLovtjUhlz3wWQT0TDeBuMYk6Ebif10KmnhyDjLyyNbMyNz0DA/exec";
+const DASHBOARD_SOURCES = {
+  "Bahasa Indonesia": "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-4JjV98DiG2XQbAu3cwbDfAJxRF9uI0VnO7l1Xcj8xsMx8iRnMHOS7GQKZUaOy-lccGAfHJ3zi-ll/pub?output=csv",
+  "Matematika": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQPLBLK6da1tmKQXtHllDCRtlAUez0hJQYr3hviHOa7Hyr6UBOfBZJbP96Vze8aK5pxjrR8xd7K9hJm/pub?output=csv"
+};
+let dashboardData = {};
+let dashboardSubject = "Bahasa Indonesia";
 
 function openSimulation(){
   openSimulationPanel(SIMULATION_URL,"📝 Simulasi 1 — Bahasa Indonesia","Simulasi 1 Bahasa Indonesia");
@@ -185,17 +206,71 @@ function openDashboard(){
   document.getElementById("simulationPanel").classList.remove("active");
   document.getElementById("simulationFrame").src="about:blank";
   document.getElementById("dashboardPanel").classList.add("active");
-  document.getElementById("dashboardFrame").src=DASHBOARD_URL;
   document.getElementById("dashboardPanel").scrollIntoView({behavior:"smooth"});
+  loadDashboard();
 }
 
 function closePanel(){
   document.getElementById("simulationPanel").classList.remove("active");
   document.getElementById("dashboardPanel").classList.remove("active");
   document.getElementById("simulationFrame").src="about:blank";
-  document.getElementById("dashboardFrame").src="about:blank";
   window.scrollTo({top:0,behavior:"smooth"});
 }
+
+function parseCSV(text){
+  const rows=[];let row=[],field="",quoted=false;
+  for(let i=0;i<text.length;i++){const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){field+='"';i++;}else if(c==='"')quoted=false;else field+=c;}else if(c==='"')quoted=true;else if(c===','){row.push(field);field='';}else if(c==='\n'){row.push(field);rows.push(row);row=[];field='';}else if(c!=='\r')field+=c;}
+  if(field.length||row.length){row.push(field);rows.push(row);}
+  const headers=(rows.shift()||[]).map((h,i)=>(h||`Kolom ${i+1}`).replace(/^\uFEFF/, '').trim());
+  return rows.filter(r=>r.some(v=>String(v||'').trim())).map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]||'').trim()])));
+}
+function normalized(s){return String(s||'').toLocaleLowerCase('id-ID').replace(/[^a-z0-9]/g,'');}
+function numeric(v){if(v==null||String(v).trim()==='')return null;let s=String(v).trim().replace(/\s/g,'');if(s.includes(',')&&!s.includes('.'))s=s.replace(',','.');else s=s.replace(/,(?=\d{3}(\D|$))/g,'');const m=s.match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):null;}
+function analyzeRows(rows){
+  if(!rows.length)return {rows,headers:[],scoreKey:null,studentKey:null,topicKeys:[],dateKey:null,duplicateCount:0};
+  const headers=Object.keys(rows[0]);
+  const studentKey=headers.find(h=>/(nama|siswa|peserta|murid|student|name)/i.test(h));
+  const dateKey=headers.find(h=>/(tanggal|waktu|timestamp|date|time)/i.test(h));
+  const scoreKey=headers.find(h=>/(nilai|skor|score|persen|hasil|benar|poin|point)/i.test(h)&&!/(rata|rerata|average|persentase|maks|total soal)/i.test(h));
+  const topicKeys=headers.filter(h=>/(materi|topik|kompetensi|indikator|bab|soal)/i.test(h));
+  const normNames=rows.map(r=>normalized(r[studentKey]));
+  const duplicateCount=normNames.filter((n,i)=>n&&normNames.indexOf(n)!==i).length;
+  return {rows,headers,scoreKey,studentKey,topicKeys,dateKey,duplicateCount};
+}
+async function loadDashboard(){
+  const box=document.getElementById('dashboardContent');
+  box.innerHTML='<div class="dash-status">Mengambil data terbaru dari dua spreadsheet…</div>';
+  await Promise.all(Object.entries(DASHBOARD_SOURCES).map(async ([subject,url])=>{
+    try{const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const text=await response.text();dashboardData[subject]=analyzeRows(parseCSV(text));}
+    catch(error){dashboardData[subject]={error:error.message};}
+  }));
+  renderDashboard();
+}
+function renderDashboard(search=''){
+  const box=document.getElementById('dashboardContent');const data=dashboardData[dashboardSubject];
+  const tabs=Object.keys(DASHBOARD_SOURCES).map(s=>`<button type="button" aria-pressed="${s===dashboardSubject}" onclick="selectDashboardSubject(${JSON.stringify(s)})">${s}</button>`).join('');
+  const searchBox=`<input class="dash-search" type="search" aria-label="Cari data siswa atau materi" placeholder="Cari siswa atau materi" value="${escapeHTML(search)}" oninput="renderDashboard(this.value)">`;
+  if(!data){box.innerHTML=`<div class="dash-controls">${tabs}</div><div class="dash-status">Memuat data…</div>`;return;}
+  if(data.error){box.innerHTML=`<div class="dash-controls">${tabs}</div><div class="dash-status error"><strong>Data ${dashboardSubject} belum dapat dimuat.</strong><br>Periksa koneksi, izin publik spreadsheet, dan akses CSV. Detail: ${escapeHTML(data.error)}.</div><p class="dash-footer">Sumber: <a href="${DASHBOARD_SOURCES[dashboardSubject]}" target="_blank" rel="noopener">buka CSV ${dashboardSubject}</a>. Bila dashboard dibuka sebagai file lokal, browser dapat membatasi pembacaan lintas situs; jalankan halaman dari hosting HTTPS.</p>`;return;}
+  const rows=data.rows;const scoreVals=data.scoreKey?rows.map(r=>numeric(r[data.scoreKey])).filter(v=>v!==null):[];
+  const maxScore=scoreVals.length&&Math.max(...scoreVals)<=100?100:Math.max(...scoreVals,1);
+  const scored=scoreVals.map(v=>Math.max(0,Math.min(100,v/maxScore*100)));
+  const avg=scored.length?scored.reduce((a,b)=>a+b,0)/scored.length:null;
+  const readiness=scored.length?{ready:scored.filter(v=>v>=readinessThreshold).length,developing:scored.filter(v=>v>=60&&v<readinessThreshold).length,support:scored.filter(v=>v<60).length}:null;
+  const recent=data.dateKey?rows.map(r=>r[data.dateKey]).filter(Boolean).sort().at(-1):null;
+  const filtered=rows.filter(r=>!search||Object.values(r).some(v=>String(v).toLocaleLowerCase('id-ID').includes(search.toLocaleLowerCase('id-ID'))));
+  const kpis=`<div class="dash-kpis"><div class="dash-kpi"><span>Jumlah respons</span><strong>${rows.length}</strong></div><div class="dash-kpi"><span>Rata-rata ${data.scoreKey?escapeHTML(data.scoreKey):'nilai'}</span><strong>${avg===null?'—':avg.toFixed(1)+'%'}</strong></div><div class="dash-kpi"><span>Siap (≥${readinessThreshold}%)</span><strong>${readiness?readiness.ready:'—'}</strong></div><div class="dash-kpi"><span>Perlu penguatan (&lt;60%)</span><strong>${readiness?readiness.support:'—'}</strong></div></div>`;
+  const readinessCard=readiness?`<div class="dash-card"><h3>Kesiapan berdasarkan nilai</h3>${bar('Siap',readiness.ready,scored.length,'ready')}${bar('Berkembang',readiness.developing,scored.length,'mid')}${bar('Perlu penguatan',readiness.support,scored.length,'low')}<p class="dash-footer">Patokan awal: siap ≥${readinessThreshold}%, berkembang 60–${readinessThreshold-1}%, perlu penguatan &lt;60%. Ini indikator deskriptif, bukan standar kelulusan.</p></div>`:`<div class="dash-card"><h3>Analisis kesiapan belum tersedia</h3><p>Kolom nilai/skor belum terdeteksi otomatis. Data tetap dapat diperiksa pada tabel; sesuaikan nama kolom sumber agar analisis nilai dapat dihitung.</p></div>`;
+  const topics=topicSummary(rows,data.topicKeys,search);
+  const tableRows=filtered.slice(0,100).map((r,i)=>{const val=data.scoreKey?numeric(r[data.scoreKey]):null;const pct=val===null?null:Math.max(0,Math.min(100,val/maxScore*100));const level=pct===null?'—':pct>=80?'Siap':pct>=60?'Berkembang':'Perlu penguatan';const cls=level==='Siap'?'ready':level==='Berkembang'?'developing':level==='Perlu penguatan'?'support':'';return `<tr><td>${i+1}</td><td>${data.studentKey?'Peserta '+String(i+1).padStart(2,'0'):'Respons '+String(i+1).padStart(2,'0')}</td><td>${data.scoreKey&&val!==null?escapeHTML(r[data.scoreKey]):'—'}</td><td>${pct===null?'—':pct.toFixed(1)+'%'}</td><td class="readiness ${cls}">${level}</td><td>${data.dateKey?escapeHTML(r[data.dateKey]):'—'}</td></tr>`;}).join('');
+  box.innerHTML=`<div class="dash-controls">${tabs}<select aria-label="Ambang kesiapan" onchange="setThreshold(this.value)"><option value="80" ${readinessThreshold===80?'selected':''}>Ambang siap: 80%</option><option value="75" ${readinessThreshold===75?'selected':''}>Ambang siap: 75%</option><option value="70" ${readinessThreshold===70?'selected':''}>Ambang siap: 70%</option></select>${searchBox}</div><p class="dash-note">Ringkasan deskriptif dari ${rows.length} baris data ${dashboardSubject}. Daftar siswa disamarkan pada tampilan ini. Persentase mengasumsikan nilai maksimum 100 kecuali ada skala lain pada sumber.</p>${kpis}<div class="dash-grid">${readinessCard}<div class="dash-card"><h3>Materi / topik</h3>${topics||'<p>Kolom materi/topik belum ditemukan di sumber.</p>'}</div></div><div class="dash-card dash-table-wrap"><h3>Rincian respons${filtered.length>100?' (100 pertama)':''}</h3><table class="dash-table"><thead><tr><th>No.</th><th>Peserta</th><th>${data.scoreKey?escapeHTML(data.scoreKey):'Nilai'}</th><th>Persentase</th><th>Indikasi</th><th>Tanggal</th></tr></thead><tbody>${tableRows||'<tr><td colspan="6">Tidak ada respons yang cocok.</td></tr>'}</tbody></table></div><p class="dash-footer">${data.headers.length} kolom terdeteksi. Baris duplikat berdasarkan nama: ${data.duplicateCount}. Sumber: <a href="${DASHBOARD_SOURCES[dashboardSubject]}" target="_blank" rel="noopener">CSV ${dashboardSubject}</a>. Data publik di spreadsheet tetap dapat diakses melalui tautan sumber.</p>`;
+}
+let readinessThreshold=80;
+function setThreshold(value){readinessThreshold=Number(value)||80;renderDashboard();}
+function selectDashboardSubject(subject){dashboardSubject=subject;renderDashboard();}
+function bar(label,count,total,kind){const width=total?count/total*100:0;return `<div class="bar-row"><span>${label}</span><div class="bar-track"><div class="bar-fill ${kind==='ready'?'':kind}" style="width:${width}%"></div></div><strong>${count}</strong></div>`;}
+function topicSummary(rows,keys,search){if(!keys.length)return '';return keys.slice(0,8).map(k=>{const vals=rows.map(r=>numeric(r[k])).filter(v=>v!==null);if(vals.length){const mean=vals.reduce((a,b)=>a+b,0)/vals.length;const p=Math.max(0,Math.min(100,mean<=1?mean*100:mean));return bar(k,Math.round(p),100,p>=80?'ready':p>=60?'mid':'low');}const answered=rows.filter(r=>String(r[k]||'').trim()).length;return bar(k,answered,rows.length,answered===rows.length?'ready':'mid');}).join('');}
+function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 </script>
 </body>
 </html>
