@@ -239,12 +239,22 @@ function analyzeRows(rows){
 }
 async function loadDashboard(){
   const box=document.getElementById('dashboardContent');
-  box.innerHTML='<div class="dash-status">Mengambil data terbaru dari dua spreadsheet…</div>';
+  dashboardData={};
+  box.innerHTML='<div class="dash-status">Mengambil data terbaru… Jika sumber tidak merespons, pesan kendala akan muncul otomatis.</div>';
   await Promise.all(Object.entries(DASHBOARD_SOURCES).map(async ([subject,url])=>{
-    try{const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const text=await response.text();dashboardData[subject]=analyzeRows(parseCSV(text));}
-    catch(error){dashboardData[subject]={error:error.message};}
+    const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),15000);
+    try{
+      const response=await fetch(url,{cache:'no-store',signal:controller.signal});
+      if(!response.ok)throw new Error(`HTTP ${response.status}`);
+      const text=await response.text();
+      if(!text.trim()||/^\s*</.test(text))throw new Error('Tautan tidak mengembalikan CSV. Pastikan spreadsheet dipublikasikan sebagai CSV.');
+      const rows=parseCSV(text);
+      if(!rows.length)throw new Error('CSV terbaca tetapi belum berisi baris data.');
+      dashboardData[subject]=analyzeRows(rows);
+    }catch(error){
+      dashboardData[subject]={error:error.name==='AbortError'?'Waktu tunggu 15 detik habis. Periksa koneksi, akses publik CSV, atau batasan CORS saat halaman dibuka dari file lokal.':error.message||'Permintaan data gagal. Periksa akses publik CSV dan batasan CORS.'};
+    }finally{clearTimeout(timer);renderDashboard();}
   }));
-  renderDashboard();
 }
 function renderDashboard(search=''){
   const box=document.getElementById('dashboardContent');const data=dashboardData[dashboardSubject];
